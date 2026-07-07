@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= judul %></title>
+</head>
+<body>
+    <%- include("partials/nav") %>
+
+    <h1><%= judul %></h1>
+
+    <% if(success.length > 0){ %>
+        <div style="color:green;">
+            <%= success %>
+        </div>
+    <% } %>
+
+    <a href="/handphone/tambah">Tambah</a>
+    <table>
+        <thead>
+            <tr>
+                <th>AKSI</th>
+                <th>NAMA HP</th>
+                <th>MEREK</th>
+                <th>OS</th>
+                <th>HARGA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if(data.length > 0) { %>
+                <% data.forEach(function(item, index) { %>
+                    <tr>
+                        <td>
+                            <a href="/handphone/delete/<%= item.id %>" onclick="return confirm('Yakin ingin menghapus data ini?')">
+                                Hapus
+                            </a>
+                            <a href="/handphone/edit/<%= item.id %>">
+                                Edit
+                            </a>
+                        </td>
+                        <td>
+                            <%= item.nama_hp %>
+                        </td>
+                        <td>
+                            <%= item.merek %>
+                        </td>
+                        <td>
+                            <%= item.tipe_os %>
+                        </td>
+                        <td>
+                            <%= new Intl.NumberFormat('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            }).format(item.harga) %>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } else { %>
+                <tr>    
+                    <td colspan="5">Data kosong</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

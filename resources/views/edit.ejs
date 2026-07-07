@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= judul %></title>
+</head>
+<body>
+    <%- include("partials/nav") %>
+
+    <h1><%= judul %></h1>
+
+    <form action="/handphone/edit/<%= data[0].id %>" method="POST">
+        <div>
+            <label id="nama_hp">Nama</label>
+            <input type="text" name="nama_hp" id="nama_hp" value="<%= data[0].nama_hp %>">
+        </div>
+        <div>
+            <label id="merek">Merek</label>
+            <input type="text" name="merek" id="merek" value="<%= data[0].merek %>">
+        </div>
+        <div>
+            <label id="tipe_os">Tipe OS</label>
+            <select name="tipe_os" id="tipe_os">
+                <option value="Android" <%= data[0].tipe_os == "Android" ? "selected" : "" %>>Android</option>
+                <option value="iOS" <%= data[0].tipe_os == "iOS" ? "selected" : "" %>>iOS</option>
+            </select>
+        </div>
+        <div>
+            <label id="harga">Harga</label>
+            <input type="text" name="harga" id="harga" value="<%= Number(data[0].harga) %>">
+        </div>
+        <div>
+            <button type="submit">Edit</button>
+        </div>
+    </form>
+</body>
+</html>

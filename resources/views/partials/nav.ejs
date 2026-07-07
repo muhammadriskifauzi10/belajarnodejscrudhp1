@@ -1,0 +1,7 @@
+<%- include("logo") %>
+
+<ul>
+<% url.forEach(function(item, index) { %>
+    <li><a href="<%= item.link %>"><%= item.nama %></a></li>
+<% }) %>
+</ul>
