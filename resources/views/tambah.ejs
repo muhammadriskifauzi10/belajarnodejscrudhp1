@@ -14,10 +14,24 @@
         <div>
             <label id="nama_hp">Nama</label>
             <input type="text" name="nama_hp" id="nama_hp">
+            <% errors.forEach(function(error){ %>
+                <% if(error.path === "nama_hp"){ %>
+                    <div style="color:red">
+                        <%= error.msg %>
+                    </div>
+                <% } %>
+            <% }) %>
         </div>
         <div>
             <label id="merek">Merek</label>
             <input type="text" name="merek" id="merek">
+            <% errors.forEach(function(error){ %>
+                <% if(error.path === "merek"){ %>
+                    <div style="color:red">
+                        <%= error.msg %>
+                    </div>
+                <% } %>
+            <% }) %>
         </div>
         <div>
             <label id="tipe_os">Tipe OS</label>
@@ -25,10 +39,24 @@
                 <option value="Android">Android</option>
                 <option value="iOS">iOS</option>
             </select>
+            <% errors.forEach(function(error){ %>
+                <% if(error.path === "tipe_os"){ %>
+                    <div style="color:red">
+                        <%= error.msg %>
+                    </div>
+                <% } %>
+            <% }) %>
         </div>
         <div>
             <label id="harga">Harga</label>
             <input type="text" name="harga" id="harga">
+            <% errors.forEach(function(error){ %>
+                <% if(error.path === "harga"){ %>
+                    <div style="color:red">
+                        <%= error.msg %>
+                    </div>
+                <% } %>
+            <% }) %>
         </div>
         <div>
             <button type="submit">Simpan</button>

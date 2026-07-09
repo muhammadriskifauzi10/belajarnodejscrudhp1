@@ -3,6 +3,8 @@ const path = require("path");
 const db = require("./config/database");
 const app = express();
 
+const { body, validationResult } = require("express-validator");
+
 // app engine
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "resources", "views"))
@@ -12,6 +14,7 @@ app.use(express.static(path.join(__dirname, "public")))
 const session = require("express-session");
 const flash = require("connect-flash");
 const { render } = require("ejs");
+const { errors } = require("undici-types");
 app.use(session({
     secret: "belajar-express",
     resave: false,
@@ -31,8 +34,13 @@ app.use(express.urlencoded({
     extended: true
 }))
 
+function middlewareHome(req, res, next) {
+    console.log("Ada request masuk...")
+    next()
+}
+
 // home
-app.get("/", (req, res) => {
+app.get("/", middlewareHome, (req, res) => {
     db.query("SELECT * FROM handphone", (err, result) => {
         if (err) {
             return res.send(err);
@@ -76,11 +84,66 @@ app.get("/handphone/tambah", (req, res) => {
     const data = {
         judul: "Tambah data",
         url: url,
+        errors: [],
+        old: {}
     }
 
     res.render("tambah", data)
 })
-app.post("/handphone/tambah", (req, res) => {
+app.post("/handphone/tambah", 
+    [
+        body("nama_hp")
+            .trim()
+            .notEmpty()
+            .withMessage("Nama HP wajib diisi")
+            .bail()
+            .isLength({ min: 3 })
+            .withMessage("Nama HP minimal 3 karakter"),
+        body("merek")
+            .trim()
+            .notEmpty()
+            .withMessage("Merek wajib diisi"),
+        body("tipe_os")
+            .notEmpty()
+            .withMessage("Tipe OS wajib dipilih"),
+        body("harga")
+            .notEmpty()
+            .withMessage("Harga wajib diisi")
+            .bail()
+            .isNumeric()
+            .withMessage("Harga harus berupa angka")
+            .bail()
+            .isFloat({ min: 1000 })
+            .withMessage("Harga minimal Rp 1.000"),
+    ],
+    (req, res) => {
+
+    const errors = validationResult(req);
+
+    console.log(errors)
+
+    if (!errors.isEmpty()) {
+        const url = [
+            {
+                link: "/",
+                nama: "Home"
+            },
+            {
+                link: "/about",
+                nama: "About"
+            }
+        ]
+
+        const data = {
+            judul: "Tambah data",
+            url: url,
+            errors: errors.array(),
+            old: req.body
+        }
+
+        return res.render("tambah", data);
+    }
+
     const {
         nama_hp,
         merek,
@@ -186,10 +249,10 @@ app.get("/about", (req, res) => {
 
 app.use((req, res) => {
     res.send(`
-        <p>Opps, halaman tidak ditemukan!
+        <p>Opps, halaman tidak ditemukan!</p>
     `)
 })
 
 app.listen(8007, () => {
-    console.log("Server berjalan...");
+    console.log("Server berjalan di http://localhost:8007...");
 });
